@@ -1,0 +1,31 @@
+---
+- hosts: all
+  remote_user: ubuntu
+  become: true
+  tasks:
+
+  - name: Update and upgrade servers
+    apt: 
+      update_cache: yes
+      upgrade: yes
+
+
+  - name: Install Apache2
+    apt: 
+      name:
+        - apache2
+      state: present
+   
+
+  - name: Set timezone
+    command: timedatectl set-timezone Africa/Lagos
+
+  - name: Print hostname on server
+    shell: echo "<h2> Hello!! You're Interacting with $(hostname -f) and the date is $(date)</h2>" > /var/www/html/index.html
+
+  handlers:
+  - name: Restart apache server
+    service:
+      name: apache2
+      state: restarted    
+
